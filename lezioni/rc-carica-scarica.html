@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>TelecomLab – Carica e scarica di un condensatore</title>
+<style>
+:root{--bg:#f4f8fb;--ink:#183042;--blue:#075b9c;--blue2:#1d7ed0;--red:#ef3d32;--card:#fff;--border:#d6e2ea}
+*{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--ink)}
+header{background:linear-gradient(135deg,#064f86,#0871b8);color:#fff;padding:24px 18px;text-align:center;border-bottom:6px solid #f6cf55}
+header h1{margin:0;font-size:clamp(28px,4vw,44px)} header p{margin:8px 0 0;font-size:18px}
+main{max-width:1200px;margin:auto;padding:18px}.grid{display:grid;gap:16px}.top{grid-template-columns:1.35fr .9fr}.graphs{grid-template-columns:1fr 1fr}.theory{grid-template-columns:1fr 1fr 1fr}
+@media(max-width:900px){.top,.graphs,.theory{grid-template-columns:1fr}}
+.card{background:var(--card);border:1px solid var(--border);border-radius:18px;box-shadow:0 5px 18px rgba(0,0,0,.06);padding:18px}.card h2{margin:0 0 12px;color:var(--blue)}
+.circuit-wrap{background:#fffaf0;border:2px solid #f2c84b;border-radius:16px;padding:8px}svg{width:100%;height:auto;display:block}
+.modebar{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0}button{border:0;border-radius:12px;padding:12px 18px;font-size:16px;font-weight:700;cursor:pointer;background:#dfeaf2;color:#24475c}button.active.charge{background:var(--red);color:#fff}button.active.discharge{background:var(--blue2);color:#fff}
+.controls,.kpi{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.control,.kpi div{background:#f8fbfd;border:1px solid var(--border);padding:12px;border-radius:12px}.control label{font-weight:700;display:block;margin-bottom:6px}input[type=range]{width:100%}.value,.kpi strong{font-weight:700;color:var(--blue)}.kpi strong{display:block;font-size:22px}
+@media(max-width:700px){.controls,.kpi{grid-template-columns:1fr}}
+canvas{width:100%;height:320px;background:#fff;border-radius:12px;border:1px solid var(--border)}
+.formula{font-size:24px;font-family:Georgia,serif;text-align:center;padding:10px;background:#fff;border-radius:12px;border:1px solid var(--border)}
+.note{background:#eef7ff;border-left:5px solid var(--blue);padding:12px;border-radius:8px;margin-top:12px}table{width:100%;border-collapse:collapse}th,td{padding:8px;border-bottom:1px solid #d8e3ea;text-align:center}th{background:#edf5fa}footer{text-align:center;color:#607786;padding:18px}
+
+.tau{font-family:Georgia,"Times New Roman",serif;font-style:italic;font-weight:700;font-size:1.08em}
+</style>
+
+<style id="telecomlab-home-nav-style">
+.telecomlab-home-bar{position:sticky;top:0;z-index:99999;display:flex;justify-content:flex-start;align-items:center;box-sizing:border-box;padding:9px 14px;background:#10304b;color:#fff;box-shadow:0 2px 10px rgba(0,0,0,.18);font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.3}
+.telecomlab-home-bar a{display:inline-flex;align-items:center;gap:7px;background:#fff;color:#10304b!important;border:1px solid #dbe8f4;border-radius:9px;padding:9px 14px;text-decoration:none!important;font-size:14px;font-weight:700;line-height:1.3;box-sizing:border-box}
+.telecomlab-home-bar a:hover,.telecomlab-home-bar a:focus-visible{background:#e8f4ff;color:#092338!important;outline-offset:2px}
+@media(max-width:540px){.telecomlab-home-bar{padding:7px 10px}.telecomlab-home-bar a{padding:8px 10px;font-size:13px}}
+</style>
+</head>
+<body>
+<div class="telecomlab-home-bar" role="navigation" aria-label="Ritorno alla pagina iniziale"><a href="../index.html" aria-label="Torna alla pagina iniziale di TelecomLab">&#8592; Torna a TelecomLab</a></div>
+
+<header><h1>Carica e scarica di un condensatore</h1><p>TelecomLab – circuito RC nel dominio del tempo</p></header>
+<main>
+<section class="grid top">
+<div class="card">
+<h2>1. Il circuito con deviatore</h2>
+<div class="circuit-wrap">
+<svg viewBox="0 0 820 450" aria-label="Circuito RC con deviatore">
+<defs>
+  <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+    <path d="M0,0 L0,6 L9,3 z" fill="#183042"/>
+  </marker>
+</defs>
+
+<!-- Generatore in continua e ramo sinistro -->
+<!-- Collegamenti interrotti sulle armature: nessuna linea attraversa il generatore -->
+<line x1="120" y1="165" x2="260" y2="165" stroke="#111" stroke-width="6"/>
+<line x1="120" y1="165" x2="120" y2="225" stroke="#111" stroke-width="6"/>
+<!-- piastra positiva lunga -->
+<line x1="88" y1="225" x2="152" y2="225" stroke="#111" stroke-width="6"/>
+<!-- piastra negativa corta -->
+<line x1="102" y1="260" x2="138" y2="260" stroke="#111" stroke-width="6"/>
+<line x1="120" y1="260" x2="120" y2="330" stroke="#111" stroke-width="6"/>
+<text x="56" y="251" font-size="33" font-family="Georgia">E</text>
+<text x="74" y="214" font-size="28">+</text>
+<text x="78" y="292" font-size="28">−</text>
+
+<!-- Deviatore: comune sul ramo R, contatto 1 a sinistra, contatto 2 in basso -->
+<circle cx="260" cy="165" r="8" fill="#111"/>
+<circle cx="330" cy="165" r="8" fill="#111"/>
+<circle cx="330" cy="235" r="8" fill="#111"/>
+<line id="switchArm" x1="330" y1="165" x2="260" y2="165" stroke="#111" stroke-width="7" stroke-linecap="round"/>
+<text x="246" y="137" font-size="26" fill="#d82f25" font-weight="700">1</text>
+<text x="340" y="230" font-size="26" fill="#116ac0" font-weight="700">2</text>
+<text x="270" y="92" font-size="24" font-weight="700">Deviatore</text>
+<line x1="330" y1="235" x2="330" y2="330" stroke="#111" stroke-width="6"/>
+
+<!-- Ramo superiore con resistenza -->
+<line x1="330" y1="165" x2="430" y2="165" stroke="#111" stroke-width="6"/>
+<polyline points="430,165 445,145 465,185 485,145 505,185 525,145 545,185 560,165 575,165" fill="none" stroke="#111" stroke-width="6"/>
+<line x1="575" y1="165" x2="650" y2="165" stroke="#111" stroke-width="6"/>
+<text x="493" y="220" font-size="31" font-family="Georgia">R</text>
+
+<!-- Ramo destro e condensatore -->
+<line x1="650" y1="165" x2="650" y2="225" stroke="#111" stroke-width="6"/>
+<line x1="620" y1="225" x2="680" y2="225" stroke="#111" stroke-width="7"/>
+<line x1="620" y1="250" x2="680" y2="250" stroke="#111" stroke-width="7"/>
+<line x1="650" y1="250" x2="650" y2="330" stroke="#111" stroke-width="6"/>
+<text x="700" y="248" font-size="31" font-family="Georgia">C</text>
+
+<!-- Ramo inferiore e massa -->
+<line x1="650" y1="330" x2="120" y2="330" stroke="#111" stroke-width="6"/>
+<circle cx="330" cy="330" r="6" fill="#111"/>
+<line x1="330" y1="330" x2="330" y2="356" stroke="#111" stroke-width="5"/>
+<line x1="295" y1="356" x2="365" y2="356" stroke="#111" stroke-width="5"/>
+<line x1="305" y1="368" x2="355" y2="368" stroke="#111" stroke-width="5"/>
+<line x1="317" y1="380" x2="343" y2="380" stroke="#111" stroke-width="5"/>
+
+<!-- Verso della corrente: carica e scarica -->
+<g id="chargeCurrent">
+  <line x1="155" y1="135" x2="225" y2="135" stroke="#183042" stroke-width="4" marker-end="url(#arrow)"/>
+  <text x="185" y="122" font-size="27" font-family="Georgia">I</text>
+</g>
+<g id="dischargeCurrent" style="display:none">
+  <line x1="585" y1="122" x2="510" y2="122" stroke="#183042" stroke-width="4" marker-end="url(#arrow)"/>
+  <text x="542" y="108" font-size="27" font-family="Georgia">I</text>
+</g>
+
+<!-- VR -->
+<path id="vrArrow" d="M560 110 Q500 68 438 110" stroke="#183042" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+<text x="492" y="99" font-size="28" font-family="Georgia">V<tspan baseline-shift="sub" font-size="20">R</tspan></text>
+
+<!-- VC -->
+<path d="M700 300 Q730 236 700 174" stroke="#183042" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+<text x="720" y="240" font-size="28" font-family="Georgia">V<tspan baseline-shift="sub" font-size="20">C</tspan></text>
+
+<text x="560" y="92" font-size="24" id="modeText" fill="#d82f25" font-weight="700">CARICA</text>
+</svg>
+</div>
+<p>Posizione 1: il generatore alimenta il circuito e il condensatore si carica. Posizione 2: il generatore viene escluso e il condensatore si scarica attraverso R.</p>
+<div class="modebar"><button id="chargeBtn" class="active charge">Posizione 1 · CARICA</button><button id="dischargeBtn" class="discharge">Posizione 2 · SCARICA</button><button id="resetBtn">Riporta t = 0</button></div>
+<div class="controls">
+<div class="control"><label>V = <span id="vVal" class="value">10 V</span></label><input id="vRange" type="range" min="1" max="20" value="10"></div>
+<div class="control"><label>R = <span id="rVal" class="value">10 kΩ</span></label><input id="rRange" type="range" min="1" max="100" value="10"></div>
+<div class="control"><label>C = <span id="cVal" class="value">100 µF</span></label><input id="cRange" type="range" min="10" max="500" step="10" value="100"></div>
+</div>
+<div class="kpi"><div><span><span class="tau">τ</span> = R·C</span><strong id="tauVal">1,00 s</strong></div><div><span>5<span class="tau">τ</span></span><strong id="fiveTauVal">5,00 s</strong></div><div><span>|I₀| = V/R</span><strong id="i0Val">1,00 mA</strong></div></div>
+</div>
+<div class="card">
+<h2>2. Valori istantanei</h2>
+<div class="kpi"><div><span>Tempo</span><strong id="timeVal">0,00 s</strong><small id="timeTau">0,00 <span class="tau">τ</span></small></div><div><span>Vc(t)</span><strong id="vcNow">0,00 V</strong></div><div><span>I(t)</span><strong id="iNow">1,00 mA</strong></div></div>
+<div class="note" id="explainBox"></div>
+<h2 style="margin-top:20px">Punti da ricordare</h2>
+<table><tr><th>Istante</th><th>Carica: Vc</th><th>Scarica: Vc</th><th>|I|</th></tr><tr><td>0</td><td>0%</td><td>100%</td><td>100%</td></tr><tr><td><span class="tau">τ</span></td><td>≈63%</td><td>≈37%</td><td>≈37%</td></tr><tr><td>5<span class="tau">τ</span></td><td>≈99%</td><td>≈1%</td><td>≈1%</td></tr></table>
+</div>
+</section>
+<section class="grid graphs" style="margin-top:16px"><div class="card"><h2 id="vGraphTitle">3. Tensione durante la carica</h2><canvas id="vCanvas" width="900" height="420"></canvas></div><div class="card"><h2 id="iGraphTitle">4. Corrente durante la carica</h2><canvas id="iCanvas" width="900" height="420"></canvas></div></section>
+<section class="card" style="margin-top:16px">
+<h2>5. Muoviti nel tempo</h2>
+<p class="small">Trascina il cursore da 0 a 5<span class="tau">τ</span>: i punti evidenziati sui grafici seguono l'istante selezionato.</p>
+<input id="timeRange" type="range" min="0" max="5" step="0.01" value="0" style="width:100%">
+<div style="display:flex;justify-content:space-between;font-weight:700;color:#536b79;margin-top:6px"><span>0</span><span class="tau">τ</span><span>2<span class="tau">τ</span></span><span>3<span class="tau">τ</span></span><span>4<span class="tau">τ</span></span><span>5<span class="tau">τ</span></span></div>
+</section>
+<section class="grid theory" style="margin-top:16px">
+<div class="card" style="background:#fff7dc"><h2>La costante di tempo</h2><div class="formula"><span class="tau">τ</span> = R · C</div><p>A t=<span class="tau">τ</span>: in carica Vc≈0,63V; in scarica Vc≈0,37V; |I|≈0,37·V/R.</p></div>
+<div class="card" style="background:#fff0ee"><h2>Leggi della carica</h2><div class="formula">Vc(t)=V(1−e<sup>−t/RC</sup>)</div><div class="formula" style="margin-top:8px">I(t)=(V/R)e<sup>−t/RC</sup></div></div>
+<div class="card" style="background:#eef9ef"><h2>Leggi della scarica</h2><div class="formula">Vc(t)=Ve<sup>−t/RC</sup></div><div class="formula" style="margin-top:8px">I(t)=−(V/R)e<sup>−t/RC</sup></div></div>
+</section>
+<section class="card" style="margin-top:16px;background:#fff8d9"><h2>6. In sintesi</h2><ul><li><span class="tau">τ</span>=R·C determina la rapidità del transitorio.</li><li>Dopo 1<span class="tau">τ</span>: 63% della carica oppure 37% residuo in scarica.</li><li>Dopo circa 5<span class="tau">τ</span> il transitorio è praticamente terminato: Vc≈0,99V in carica e Vc≈0,01V in scarica.</li><li>In scarica la corrente ha segno opposto rispetto alla carica.</li></ul></section>
+</main><footer>TelecomLab · Classe quarta · Circuiti RC</footer>
+<script>
+const $=id=>document.getElementById(id);let mode='charge';const vR=$('vRange'),rR=$('rRange'),cR=$('cRange'),tR=$('timeRange');
+function P(){let V=+vR.value,Rk=+rR.value,Cu=+cR.value,R=Rk*1000,C=Cu*1e-6,tau=R*C,I0=V/R;return{V,Rk,Cu,R,C,tau,I0}}
+const fmt=(n,d=2)=>n.toLocaleString('it-IT',{minimumFractionDigits:d,maximumFractionDigits:d});
+function update(){let p=P(),x=+tR.value,t=x*p.tau,vc=mode==='charge'?p.V*(1-Math.exp(-x)):p.V*Math.exp(-x),I=(mode==='charge'?1:-1)*p.I0*Math.exp(-x);
+$('vVal').textContent=fmt(p.V,0)+' V';$('rVal').textContent=fmt(p.Rk,0)+' kΩ';$('cVal').textContent=fmt(p.Cu,0)+' µF';$('tauVal').textContent=fmt(p.tau)+' s';$('fiveTauVal').textContent=fmt(5*p.tau)+' s';$('i0Val').textContent=fmt(p.I0*1000)+' mA';$('timeVal').textContent=fmt(t)+' s';$('timeTau').textContent=fmt(x)+' τ';$('vcNow').textContent=fmt(vc)+' V';$('iNow').textContent=fmt(I*1000)+' mA';
+if(mode==='charge'){$('vGraphTitle').textContent='3. Tensione durante la carica';$('iGraphTitle').textContent='4. Corrente durante la carica';$('modeText').textContent='CARICA';$('modeText').setAttribute('fill','#d82f25');$('vrArrow').setAttribute('d','M560 110 Q500 68 438 110');$('switchArm').setAttribute('x2','260');$('switchArm').setAttribute('y2','165');$('chargeCurrent').style.display='';$('dischargeCurrent').style.display='none';$('explainBox').innerHTML=x<.05?'All’inizio: <b>Vc(0)=0</b> e <b>I(0)=V/R</b>.':x>.95&&x<1.05?'A <b>t=τ</b>: <b>Vc≈0,63V</b> e <b>I≈0,37V/R</b>.':x>4.9?'A <b>5τ</b>: <b>Vc≈0,99V</b> e <b>I≈0,01V/R</b>.':'Vc cresce verso V mentre I diminuisce verso zero.'}
+else{$('vGraphTitle').textContent='3. Tensione durante la scarica';$('iGraphTitle').textContent='4. Corrente durante la scarica';$('modeText').textContent='SCARICA';$('modeText').setAttribute('fill','#116ac0');$('vrArrow').setAttribute('d','M438 110 Q500 68 560 110');$('switchArm').setAttribute('x2','330');$('switchArm').setAttribute('y2','235');$('chargeCurrent').style.display='none';$('dischargeCurrent').style.display='';$('explainBox').innerHTML=x<.05?'All’inizio: <b>Vc(0)=V</b> e <b>I₀=−V/R</b>.':x>.95&&x<1.05?'A <b>t=τ</b>: <b>Vc≈0,37V</b> e <b>I≈−0,37V/R</b>.':x>4.9?'A <b>5τ</b>: <b>Vc≈0,01V</b> e <b>I≈−0,01V/R</b>.':'Vc e |I| diminuiscono verso zero; I è negativa.'}
+drawV(x);drawI(x)}
+function drawV(xNow){let c=$('vCanvas'),g=c.getContext('2d'),w=c.width,h=c.height,L=70,R=25,T=30,B=55,pw=w-L-R,ph=h-T-B;g.clearRect(0,0,w,h);g.strokeStyle='#183042';g.lineWidth=2;g.beginPath();g.moveTo(L,T);g.lineTo(L,h-B);g.lineTo(w-R,h-B);g.stroke();g.fillStyle='#183042';g.font='18px Arial';g.fillText('Vc(t)',14,T+10);g.fillText('t',w-R,h-B+28);g.strokeStyle='#ef3d32';g.lineWidth=4;g.beginPath();for(let k=0;k<=300;k++){let x=5*k/300,y=mode==='charge'?1-Math.exp(-x):Math.exp(-x),px=L+pw*x/5,py=T+ph*(1-y);k?g.lineTo(px,py):g.moveTo(px,py)}g.stroke();[1,5].forEach(xx=>{let y=mode==='charge'?1-Math.exp(-xx):Math.exp(-xx),px=L+pw*xx/5,py=T+ph*(1-y);g.fillStyle='#ef3d32';g.beginPath();g.arc(px,py,6,0,Math.PI*2);g.fill();g.fillStyle='#183042';g.fillText(xx===1?(mode==='charge'?'63%':'37%'):(mode==='charge'?'99%':'1%'),px+8,py-8);g.setLineDash([6,5]);g.strokeStyle=xx===1?'#ef3d32':'#768b98';g.beginPath();g.moveTo(px,T);g.lineTo(px,h-B);g.stroke();g.setLineDash([]);g.save();g.font='italic 22px Georgia, serif';g.fillStyle='#183042';g.fillText(xx===1?'τ':'5τ',px-10,h-B+25);g.restore()});let y=mode==='charge'?1-Math.exp(-xNow):Math.exp(-xNow);g.fillStyle='#075b9c';g.beginPath();g.arc(L+pw*xNow/5,T+ph*(1-y),7,0,Math.PI*2);g.fill()}
+function drawI(xNow){let c=$('iCanvas'),g=c.getContext('2d'),w=c.width,h=c.height,L=80,R=25,T=30,B=55,pw=w-L-R,bottom=h-B,zeroY=mode==='charge'?bottom:120;g.clearRect(0,0,w,h);g.strokeStyle='#183042';g.lineWidth=2;g.beginPath();g.moveTo(L,T);g.lineTo(L,bottom);g.stroke();g.beginPath();g.moveTo(L,zeroY);g.lineTo(w-R,zeroY);g.stroke();g.fillStyle='#183042';g.font='18px Arial';g.fillText('I(t)',15,T+5);g.fillText('t',w-R,zeroY+28);g.strokeStyle='#116ac0';g.lineWidth=4;g.beginPath();for(let k=0;k<=300;k++){let x=5*k/300,v=Math.exp(-x),px=L+pw*x/5,py=mode==='charge'?T+(bottom-T)*(1-v):zeroY+(bottom-zeroY)*v;k?g.lineTo(px,py):g.moveTo(px,py)}g.stroke();g.fillStyle='#183042';g.font='16px Arial';if(mode==='charge'){g.fillText('I₀ = V/R',8,T+20);g.save();g.font='italic 17px Georgia, serif';g.fillText('I(τ) ≈ 0,37 V/R',L+140,T+150);g.fillText('I(5τ) ≈ 0,01 V/R',w-280,bottom-40);g.restore()}else{g.fillText('0',L-22,zeroY+5);g.fillText('I₀ = −V/R',6,bottom-6);g.save();g.font='italic 17px Georgia, serif';g.fillText('I(τ) ≈ −0,37 V/R',L+140,zeroY+150);g.fillText('I(5τ) ≈ −0,01 V/R',w-290,zeroY+55);g.restore()}let v=Math.exp(-xNow),px=L+pw*xNow/5,py=mode==='charge'?T+(bottom-T)*(1-v):zeroY+(bottom-zeroY)*v;g.fillStyle='#ef3d32';g.beginPath();g.arc(px,py,7,0,Math.PI*2);g.fill()}
+[vR,rR,cR,tR].forEach(e=>e.addEventListener('input',update));$('chargeBtn').onclick=()=>{mode='charge';$('chargeBtn').classList.add('active');$('dischargeBtn').classList.remove('active');update()};$('dischargeBtn').onclick=()=>{mode='discharge';$('dischargeBtn').classList.add('active');$('chargeBtn').classList.remove('active');update()};$('resetBtn').onclick=()=>{tR.value=0;update()};update();
+</script>
+</body></html>
