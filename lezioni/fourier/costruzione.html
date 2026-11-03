@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+
+<html lang="it">
+<head>
+<meta charset="utf-8"/><meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>TelecomLab | Laboratorio di somma delle armoniche</title>
+<style>
+:root{color-scheme:light;--ink:#15283b;--sub:#597084;--edge:#d9e3ed;--bg:#f2f6fa;--paper:#fff;--brand:#1764ac;--orange:#e88b29}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,-apple-system,Segoe UI,Arial,sans-serif}header{background:linear-gradient(115deg,#102e4c,#155b97);color:white;padding:25px max(22px,calc((100% - 1250px)/2)) 28px}header .eyebrow{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:#b7dcff;font-weight:700}h1{font-size:clamp(25px,3vw,36px);margin:6px 0 8px;line-height:1.17}header p{color:#e2f0ff;max-width:890px;margin:0}main{max-width:1290px;padding:22px 20px 50px;margin:auto}.panel{background:var(--paper);border:1px solid var(--edge);border-radius:16px;box-shadow:0 5px 20px #17395a0b;padding:22px;margin-bottom:18px}h2{font-size:20px;margin:0 0 11px}h3{font-size:15px;margin:0 0 8px}.muted,.hint{color:var(--sub)}.intro{display:flex;justify-content:space-between;gap:20px;align-items:center;flex-wrap:wrap}.formula{padding:12px 18px;background:#edf5fe;border:1px solid #cbdff4;border-radius:12px;font-weight:600;color:#164f87;white-space:normal}.tag{display:inline-block;background:#e5f3ff;border-radius:100px;padding:3px 10px;color:#205e94;font-size:12px;font-weight:700}.actions{display:flex;gap:9px;flex-wrap:wrap;margin:17px 0 6px}button{border-radius:10px;padding:10px 14px;font:inherit;font-weight:650;cursor:pointer;border:1px solid #cbd7e3;background:white;color:#25445e}button.primary{background:var(--brand);color:white;border-color:var(--brand)}button:hover{filter:brightness(.95)}button:focus-visible,input:focus-visible{outline:3px solid #ffba65;outline-offset:3px}button:disabled{opacity:.45;cursor:not-allowed}.meta{display:flex;flex-wrap:wrap;gap:9px;margin:12px 0 0}.pill{background:#f0f5f9;border-radius:10px;padding:7px 11px;font-size:13px}.pill strong{color:#145f9f}.circuit{width:100%;background:#fafcff;border-radius:12px;border:1px solid #e3ecf3;display:block}.circuit .src{cursor:pointer;outline:none}.circuit .src:focus-visible .ring{stroke-width:4}.circuit .src:hover .ring{stroke-width:4}.layout{display:grid;grid-template-columns:1fr 1fr;gap:18px}.graphArea{min-width:0}.canvasWrap{border:1px solid #e4ecf4;border-radius:10px;background:#fcfdff;overflow:hidden}canvas{display:block;width:100%}.chartHead{display:flex;gap:10px;justify-content:space-between;align-items:baseline;flex-wrap:wrap;margin-bottom:10px}.chartHead .muted{font-size:12px}.harmList{display:grid;grid-template-columns:repeat(auto-fit,minmax(185px,1fr));gap:9px;margin:15px 0 0}.harm{display:flex;align-items:center;gap:9px;padding:9px 11px;border:1px solid #e0e8f1;border-radius:10px;cursor:pointer;background:#fff;min-width:0}.harm.off{opacity:.57;background:#f5f7fa}.harm input{accent-color:#1466ae;width:16px;height:16px;flex:none}.dot{height:11px;width:11px;border-radius:100%;flex:none}.harm b{font-size:13px}.harm small{font-size:11px;color:var(--sub);display:block}.note{background:#fff8e9;border-left:4px solid #ecaa44;border-radius:8px;padding:11px 14px;margin-top:15px;font-size:13px}.controls{display:flex;gap:12px;align-items:center;flex-wrap:wrap}.controls label{font-weight:650}.controls input[type=range]{accent-color:#1764ac;width:160px}.legend{display:flex;gap:18px;flex-wrap:wrap;font-size:12px;color:#476178;margin-top:8px}.swatch{display:inline-block;width:24px;height:3px;vertical-align:middle;margin-right:5px}.readout{font-variant-numeric:tabular-nums}.footer{font-size:12px;text-align:center;color:var(--sub);padding:5px}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}@media(max-width:830px){.layout{grid-template-columns:1fr}.panel{padding:15px}main{padding:13px}.formula{width:100%}}
+
+.tl-nav{max-width:1290px;margin:0 auto;padding:14px 20px 0;display:flex;gap:9px;flex-wrap:wrap}.tl-nav a{padding:10px 15px;border:1px solid #cbdceb;border-radius:10px;background:white;color:#174467;text-decoration:none;font-weight:700}.tl-nav a[aria-current="page"]{background:#145b99;color:white;border-color:#145b99}.tl-next{display:inline-flex;background:#1564a2;color:#fff;text-decoration:none;padding:12px 17px;border-radius:9px;font-weight:700;margin:12px 0}.tl-info{border-left:4px solid #e88b29;background:#fff8ef;padding:12px 14px;border-radius:8px;margin:14px 0}.tl-nav a:focus-visible,.tl-next:focus-visible{outline:3px solid #efaa4b}</style>
+<style id="telecomlab-back-home">.telecomlab-home-link{position:fixed;top:12px;right:12px;z-index:99999;display:inline-flex;align-items:center;gap:6px;padding:10px 14px;background:#ffffff;color:#103b60!important;border:2px solid #146ca6;border-radius:999px;font:700 14px/1.2 system-ui,Segoe UI,Arial,sans-serif;text-decoration:none!important;box-shadow:0 3px 12px #122d4a30}.telecomlab-home-link:hover,.telecomlab-home-link:focus{background:#e8f5ff;outline-offset:2px}@media(max-width:560px){.telecomlab-home-link{top:auto;bottom:12px;right:12px;padding:10px 12px}}</style></head>
+<body>
+<header><div class="eyebrow">TelecomLab · Classe quarta · Laboratorio interattivo</div><h1>Costruiamo un'onda quadra sommando sinusoidi</h1><p>Seleziona le armoniche sinusoidali, osserva ogni componente e scopri come la loro somma si avvicina progressivamente a un'onda quadra.</p></header><nav aria-label="Navigazione modulo" class="tl-nav"><a href="index.html">Panoramica</a><a aria-current="page" href="costruzione.html">1 · Costruzione</a><a href="filtro.html">2 · Filtraggio</a><a href="verifica.html">3 · Verifica</a></nav>
+<main>
+<section class="panel"><div class="intro"><div><span class="tag">Esperimento virtuale</span><h2 style="margin-top:9px">Dalla serie di Fourier alla somma delle armoniche</h2><p style="margin:0;max-width:700px">Consideriamo un'onda quadra ideale simmetrica, a valore medio nullo, con livelli <strong>+A e −A</strong> (A è un’ampiezza generica) e frequenza fondamentale f₀ = <strong>1 kHz</strong>. La ricostruiamo sommando solo le armoniche dispari, tutte con fase iniziale nulla.</p></div><div aria-label="Formula della serie di Fourier" class="formula">v(t) = (4A/π) · [sin(2πf₀t) + ⅓ sin(2π·3f₀t) + ⅕ sin(2π·5f₀t) + …]</div></div><div class="meta"><div class="pill">Fondamentale <strong>1 kHz</strong></div><div class="pill">Periodo <strong>1 ms</strong></div><div class="pill">Ampiezza <strong>generica A</strong></div><div class="pill">Armoniche disponibili <strong>1ª–13ª dispari</strong></div></div></section>
+<section class="panel"><h2>1. Componi il segnale con un sommatore</h2><p class="muted" style="margin-top:0">Ogni blocco rappresenta una componente sinusoidale della serie di Fourier. <strong>Clicca su un blocco</strong> oppure sulla relativa casella per includerla o escluderla dalla somma. Lo schema rappresenta una <strong>somma matematica di segnali</strong>, non un circuito elettrico.</p>
+<svg aria-label="Sommatore a blocchi delle sette armoniche dispari attivabili singolarmente" class="circuit" id="circuit" role="img" viewBox="0 0 1060 395"></svg>
+<div class="actions"><button class="primary" id="add">+ Aggiungi la prossima armonica</button><button id="remove">− Togli l'ultima armonica</button><button id="all">Attiva tutte</button><button id="reset">Solo fondamentale</button></div><div class="tl-info"><strong>Continua lo stesso esperimento:</strong> trasferisci al filtro le armoniche attivate nel circuito. <a class="tl-next" href="filtro.html?armoniche=1" id="toFilter">Vai al filtraggio con queste armoniche →</a></div>
+<div aria-label="Elenco delle armoniche selezionabili" class="harmList" id="harmList"></div><div class="meta"><div class="pill">Armoniche attive: <strong class="readout" id="count">1 / 7</strong></div><div class="pill">Massima armonica accesa: <strong class="readout" id="topH">1 kHz</strong></div><div class="pill">Valore istantaneo della somma: <strong class="readout" id="vInstant">0 A</strong></div></div></section>
+<div class="layout"><section class="panel graphArea"><div class="chartHead"><h2>2. Le singole sinusoidi</h2><span class="muted">Ogni colore corrisponde a un’armonica</span></div><div class="canvasWrap"><canvas aria-label="Grafici delle armoniche attivate, una sotto l'altra" id="partials" style="height:410px"></canvas></div><p class="hint" style="font-size:12px;margin-bottom:0">Gli assi verticali di ciascun riquadro hanno la stessa scala (±1,4 A): confronta direttamente le ampiezze decrescenti espresse in multipli di A.</p></section>
+<section class="panel graphArea"><div class="chartHead"><h2>3. Il segnale risultante dalla somma</h2><span class="muted">Stesso intervallo temporale: 0–2 ms</span></div><div class="canvasWrap"><canvas aria-label="Segnale somma delle armoniche attivate e onda quadra ideale di riferimento" id="sum" style="height:410px"></canvas></div><div class="legend"><span><span class="swatch" style="background:#145a9d"></span>Somma effettiva</span><span><span class="swatch" style="background:#98a6b6"></span>Onda quadra ideale (tratteggiata)</span><span><span class="swatch" style="background:#e88b29"></span>Istante evidenziato</span></div><p class="hint" style="font-size:12px;margin-bottom:0">Vicino ai salti puoi vedere oscillazioni e un piccolo superamento dei livelli ±A: è il fenomeno di Gibbs.</p></section></div>
+<section class="panel"><h2>4. Esplora il segnale nel tempo</h2><div class="controls"><button id="play">▶ Avvia animazione</button><label for="time">Istante t</label><input id="time" max="2000" min="0" step="1" type="range" value="350"/><output class="readout" id="timeValue">0,350 ms</output><span class="muted" style="font-size:13px">La linea arancione indica il medesimo istante in entrambi i grafici.</span></div><div class="note"><strong>Da far osservare agli studenti:</strong> aggiungendo la 3ª, la 5ª, la 7ª armonica e così via, il tratto centrale dell'onda diventa progressivamente più piatto e le transizioni più ripide. La ricostruzione non richiede armoniche pari. Il sommatore a blocchi rappresenta la sovrapposizione matematica delle sinusoidi, non un collegamento fisico di generatori.</div></section>
+<div class="footer">TelecomLab · Fourier e armoniche · Simulatore didattico autonomo, utilizzabile senza connessione Internet</div>
+</main>
+<script>
+'use strict';
+// Per tracciare i grafici si assume A=1 come unità di riferimento, non come tensione di 1 V.
+const F0=1000, A=1, R=1000, ORDERS=[1,3,5,7,9,11,13];
+const COLORS=['#2563eb','#e16c30','#16a085','#9c57ba','#b48c15','#da467a','#508eab'];
+const active=ORDERS.map((_,i)=>i===0);
+let tMicro=350, playing=false, lastFrame=0, animationID=null;
+const $=id=>document.getElementById(id);
+const amp=n=>4*A/(Math.PI*n);
+const harmonic=(i,t)=>amp(ORDERS[i])*Math.sin(2*Math.PI*ORDERS[i]*F0*t);
+const value=t=>ORDERS.reduce((acc,_,i)=>acc+(active[i]?harmonic(i,t):0),0);
+const hz=v=>v>=1000?`${(v/1000).toLocaleString('it-IT')} kHz`:`${v} Hz`;
+const fmtV=v=>`${v.toLocaleString('it-IT',{minimumFractionDigits:3,maximumFractionDigits:3})} A`;
+function circuit(){
+const svg=$('circuit');
+// Le connessioni colorate illustrano una somma matematica, non un circuito fisico.
+const nodeX=35,nodeW=355,nodeH=39,nodeStart=18,nodeStep=50;
+const busX=650,sumX=728,sumY=193;
+let s=`<title>Somma interattiva delle armoniche dispari</title><desc>Seleziona un'armonica con clic o tastiera. Le componenti attive confluiscono nel sommatore e formano il segnale d'uscita.</desc>`;
+ORDERS.forEach((n,i)=>{
+  const y=nodeStart+i*nodeStep, mid=y+nodeH/2, on=active[i], c=COLORS[i];
+  const color=on?c:'#9baaba';
+  // Ogni ramo distinto converge sul nodo di somma centrale.
+  const yy=sumY+(i-3)*9;
+  s+=`<path d="M${nodeX+nodeW} ${mid} H${busX-48} L${busX} ${yy} H${sumX-29}" fill="none" stroke="${color}" stroke-width="${on?2.6:1.3}" stroke-dasharray="${on?'none':'5 5'}" opacity="${on?1:.45}"/>`;
+  s+=`<g class="src" data-i="${i}" tabindex="0" role="button" aria-label="${on?'Disattiva':'Attiva'} armonica ${n}, frequenza ${n} kilohertz" aria-pressed="${on}">`;
+  s+=`<rect class="ring" x="${nodeX}" y="${y}" width="${nodeW}" height="${nodeH}" rx="9" fill="${on?c+'14':'#f0f3f6'}" stroke="${color}" stroke-width="${on?2.2:1.5}"/>`;
+  s+=`<circle cx="${nodeX+21}" cy="${mid}" r="8" fill="${on?c:'#d0d7de'}"/>`;
+  if(on)s+=`<path d="M${nodeX+17} ${mid} L${nodeX+20} ${mid+3} L${nodeX+26} ${mid-4}" fill="none" stroke="white" stroke-width="2"/>`;
+  s+=`<text x="${nodeX+39}" y="${mid+5}" font-size="15" fill="${on?'#1a344d':'#8492a0'}" font-weight="700">${n}ª armonica · ${n} kHz</text>`;
+  s+=`<text x="${nodeX+nodeW-11}" y="${mid+5}" text-anchor="end" font-size="14" fill="${color}" font-weight="700">${(4/(Math.PI*n)).toFixed(3).replace('.',',')} A</text></g>`;
+});
+s+=`<circle cx="${sumX}" cy="${sumY}" r="29" fill="#fff" stroke="#1764ac" stroke-width="3"/><text x="${sumX}" y="${sumY+10}" font-size="36" font-weight="600" text-anchor="middle" fill="#1764ac">+</text>`;
+s+=`<path d="M${sumX+29} ${sumY} H824" stroke="#1764ac" stroke-width="3"/><path d="M816 ${sumY-6} L826 ${sumY} L816 ${sumY+6}" fill="none" stroke="#1764ac" stroke-width="2.5"/>`;
+s+=`<rect x="830" y="${sumY-62}" width="200" height="124" rx="12" fill="#eef7ff" stroke="#1764ac" stroke-width="1.8"/>`;
+const boxX=842, boxY=sumY-50, boxW=176, boxH=82, boxMid=boxY+boxH/2;
+s+=`<line x1="${boxX}" y1="${boxMid}" x2="${boxX+boxW}" y2="${boxMid}" stroke="#bfd3e6" stroke-width="1"/>`;
+s+=`<line x1="${boxX}" y1="${boxY+8}" x2="${boxX}" y2="${boxY+boxH-8}" stroke="#d7e4f0" stroke-width="1"/>`;
+for(let k=1;k<=4;k++){
+  const gx=boxX+k*boxW/4;
+  s+=`<line x1="${gx}" y1="${boxY+8}" x2="${gx}" y2="${boxY+boxH-8}" stroke="#dfe9f3" stroke-width="1"/>`;
+}
+let d='';
+for(let j=0;j<=150;j++){
+  const t=0.002*j/150;
+  const xx=boxX+boxW*j/150;
+  const yy=boxMid-value(t)*(boxH*0.32);
+  d+=(j===0?`M${xx.toFixed(2)} ${yy.toFixed(2)}`:` L${xx.toFixed(2)} ${yy.toFixed(2)}`);
+}
+s+=`<path d="${d}" fill="none" stroke="#1764ac" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/>`;
+s+=`<text x="930" y="${sumY+48}" text-anchor="middle" font-size="14" font-weight="700" fill="#154e7c">Segnale somma</text>`;
+s+=`<text x="528" y="382" text-anchor="middle" font-size="13" fill="#597084">Somma matematica delle armoniche · Clicca sulle componenti per attivarle o disattivarle</text>`;
+svg.innerHTML=s;
+svg.querySelectorAll('.src').forEach(el=>{
+ const fn=()=>toggle(+el.dataset.i);
+ el.addEventListener('click',fn);
+ el.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();fn();}});
+});
+}
+function toggle(i){active[i]=!active[i];update();}
+function list(){const root=$('harmList');root.innerHTML='';ORDERS.forEach((n,i)=>{let label=document.createElement('label');label.className='harm'+(active[i]?'':' off');let input=document.createElement('input');input.type='checkbox';input.checked=active[i];input.addEventListener('change',()=>toggle(i));let dot=document.createElement('span');dot.className='dot';dot.style.background=COLORS[i];let box=document.createElement('span');let strong=document.createElement('b');strong.textContent=`${n}ª armonica · ${n} kHz`;let small=document.createElement('small');small.textContent=`Ampiezza ${amp(n).toFixed(3).replace('.',',')} A`;box.append(strong,small);label.append(input,dot,box);root.append(label);});}
+function fitCanvas(canvas){const bounds=canvas.getBoundingClientRect();const dpr=Math.min(2,window.devicePixelRatio||1);const w=Math.max(300,bounds.width),h=bounds.height||410;canvas.width=Math.round(w*dpr);canvas.height=Math.round(h*dpr);const ctx=canvas.getContext('2d');ctx.setTransform(dpr,0,0,dpr,0,0);return{ctx,w,h};}
+function plotBase(ctx,w,h,pad,level){const x=t=>pad.l+t/0.002*(w-pad.l-pad.r);ctx.fillStyle='#fcfdff';ctx.fillRect(0,0,w,h);ctx.font='11px system-ui';ctx.strokeStyle='#e6edf4';ctx.lineWidth=1;ctx.fillStyle='#698094';for(let k=0;k<=4;k++){let px=x(k*.0005);ctx.beginPath();ctx.moveTo(px,pad.t);ctx.lineTo(px,h-pad.b);ctx.stroke();ctx.textAlign='center';ctx.fillText((k*.5).toLocaleString('it-IT')+' ms',px,h-12)}return x;}
+function drawWave(ctx,plotF,tStart,tEnd,npts,color,width=2,dash=[]){ctx.beginPath();ctx.strokeStyle=color;ctx.lineWidth=width;ctx.setLineDash(dash);for(let j=0;j<=npts;j++){const t=tStart+(tEnd-tStart)*j/npts;const p=plotF(t);if(j===0)ctx.moveTo(p[0],p[1]);else ctx.lineTo(p[0],p[1]);}ctx.stroke();ctx.setLineDash([]);}
+function partials(){let{ctx,w,h}=fitCanvas($('partials'));const p={l:64,r:16,t:18,b:34};let x=plotBase(ctx,w,h,p);const enabled=ORDERS.map((_,i)=>i).filter(i=>active[i]);if(!enabled.length){ctx.fillStyle='#64788c';ctx.textAlign='center';ctx.font='14px system-ui';ctx.fillText('Attiva almeno un’armonica per vedere le sinusoidi.',w/2,h/2);return;}
+const top=p.t,bottom=h-p.b,band=(bottom-top)/enabled.length;
+enabled.forEach((idx,j)=>{const n=ORDERS[idx],center=top+band*(j+.5),scale=Math.min(band*.39,40)/1.4;
+ctx.strokeStyle='#dce7f1';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(p.l,center);ctx.lineTo(w-p.r,center);ctx.stroke();
+ctx.textAlign='left';ctx.font='bold 11px system-ui';ctx.fillStyle=COLORS[idx];ctx.fillText(`f${n} = ${n} kHz`,5,center-5);ctx.font='10px system-ui';ctx.fillStyle='#688096';ctx.fillText(`${amp(n).toFixed(2)} A`,7,center+10);
+drawWave(ctx,t=>[x(t),center-harmonic(idx,t)*scale],0,.002,1250,COLORS[idx],2.2);
+});
+const tm=tMicro/1e6,px=x(tm);ctx.save();ctx.strokeStyle='#e88b29';ctx.lineWidth=1.8;ctx.setLineDash([5,4]);ctx.beginPath();ctx.moveTo(px,p.t);ctx.lineTo(px,h-p.b);ctx.stroke();ctx.restore();}
+function sum(){let{ctx,w,h}=fitCanvas($('sum'));const p={l:45,r:18,t:24,b:34};const x=plotBase(ctx,w,h,p);const center=(p.t+h-p.b)/2,scale=(h-p.t-p.b)/3.6;let y=v=>center-v*scale;
+ctx.font='11px system-ui';ctx.textAlign='right';[-1,0,1].forEach(v=>{let py=y(v);ctx.strokeStyle=v?'#e1eaf2':'#b8c6d4';ctx.beginPath();ctx.moveTo(p.l,py);ctx.lineTo(w-p.r,py);ctx.stroke();ctx.fillStyle='#6c8193';ctx.fillText(`${v} A`,p.l-6,py+4)});
+// Scalini ideali con interruzione e tratteggio per evitare rette sui fronti verticali.
+ctx.save();ctx.strokeStyle='#97a7b5';ctx.lineWidth=2;ctx.setLineDash([6,5]);ctx.beginPath();for(let q=0;q<4;q++){const left=q*.0005,right=(q+1)*.0005,v=q%2===0?A:-A;ctx.moveTo(x(left),y(v));ctx.lineTo(x(right),y(v));if(q<3){ctx.moveTo(x(right),y(v));ctx.lineTo(x(right),y(-v));}}ctx.stroke();ctx.restore();
+drawWave(ctx,t=>[x(t),y(value(t))],0,.002,1600,'#145a9d',3);
+const t=tMicro/1e6,px=x(t),py=y(value(t));ctx.strokeStyle='#e88b29';ctx.lineWidth=1.8;ctx.setLineDash([5,4]);ctx.beginPath();ctx.moveTo(px,p.t);ctx.lineTo(px,h-p.b);ctx.stroke();ctx.setLineDash([]);ctx.beginPath();ctx.fillStyle='#e88b29';ctx.arc(px,py,4.5,0,Math.PI*2);ctx.fill();}
+function draw(){partials();sum();$('vInstant').textContent=fmtV(value(tMicro/1e6));$('timeValue').textContent=(tMicro/1000).toLocaleString('it-IT',{minimumFractionDigits:3,maximumFractionDigits:3})+' ms';}
+function update(){circuit();list();const chosen=ORDERS.filter((n,i)=>active[i]);document.getElementById("toFilter").href="filtro.html?armoniche="+encodeURIComponent(chosen.join(","));const inds=ORDERS.filter((n,i)=>active[i]);$('count').textContent=inds.length+' / 7';$('topH').textContent=inds.length?hz(inds[inds.length-1]*F0):'nessuna';$('add').disabled=active.every(Boolean);$('remove').disabled=active.every(x=>!x);draw();}
+$('add').onclick=()=>{const i=active.findIndex(x=>!x);if(i>=0){active[i]=true;update();}};
+$('remove').onclick=()=>{const i=active.findLastIndex(x=>x);if(i>=0){active[i]=false;update();}};
+$('all').onclick=()=>{active.fill(true);update();};
+$('reset').onclick=()=>{active.fill(false);active[0]=true;update();};
+$('time').addEventListener('input',e=>{tMicro=+e.target.value;draw();});
+function tick(ts){if(!playing)return;if(lastFrame){tMicro=(tMicro+(ts-lastFrame)*.32)%2001;$('time').value=Math.round(tMicro);draw();}lastFrame=ts;animationID=requestAnimationFrame(tick);}
+$('play').onclick=()=>{playing=!playing;$('play').textContent=playing?'⏸ Metti in pausa':'▶ Avvia animazione';lastFrame=0;if(playing)animationID=requestAnimationFrame(tick);else if(animationID)cancelAnimationFrame(animationID);};
+window.addEventListener('resize',draw);update();
+</script>
+<a class="telecomlab-home-link" href="../../index.html" aria-label="Torna alla pagina iniziale di TelecomLab">← Torna a TelecomLab</a></body></html>
